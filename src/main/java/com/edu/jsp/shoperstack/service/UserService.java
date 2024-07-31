@@ -1,4 +1,4 @@
-package com.edu.jsp.shoperstack.dao.impl;
+package com.edu.jsp.shoperstack.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.edu.jsp.shoperstack.dao.UserDao;
@@ -17,8 +18,11 @@ import com.edu.jsp.shoperstack.util.ResponseStructure;
 public class UserService {
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private PasswordEncoder encoder;
 
 	public ResponseEntity<ResponseStructure<User>> saveUser(User user) {
+		user.setUserPassword(encoder.encode(user.getUserPassword()));
 		ResponseStructure<User> structure = new ResponseStructure<>();
 		structure.setData(userDao.saveUser(user));
 		structure.setMessage("Created");
